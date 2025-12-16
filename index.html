@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dự án Chatbot 3 TTHC (Miễn Phí)</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f7f6;
+            text-align: center;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #007bff;
+        }
+        p {
+            color: #555;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>DỰ ÁN CHATBOT TRA CỨU TTHC ĐƠN GIẢN</h1>
+        <p>Chatbot đã sẵn sàng. Hãy thử hỏi về 3 thủ tục:</p>
+        <ul>
+            <li>**Đăng ký Kết hôn** (Ví dụ: "thủ tục làm giấy hôn thú")</li>
+            <li>**Cấp lại CCCD** (Ví dụ: "làm lại cccd gắn chip")</li>
+            <li>**Cấp lại Sổ đỏ** (Ví dụ: "tôi bị mất sổ đỏ")</li>
+        </ul>
+    </div>
+
+    <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+    <df-messenger
+      intent="WELCOME"
+      chat-title="TTHC_Chatbot_KHKT."
+      agent-id="beb30889-a174-4fd7-b494-b2a3fe16a795"
+      language-code="vi"
+    ></df-messenger>
+    
+</body>
+</html>
