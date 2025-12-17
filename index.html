@@ -28,11 +28,6 @@
             text-transform: uppercase;
             font-size: 1.6em;
         }
-        .description {
-            color: #555;
-            font-size: 1.1em;
-            margin-bottom: 20px;
-        }
         .law-list {
             text-align: left;
             background-color: #f8f9fa;
@@ -41,67 +36,67 @@
             margin-bottom: 30px;
             border-left: 5px solid #007bff;
         }
-        .law-list h3 {
-            margin-top: 0;
-            color: #333;
-        }
-        ul {
-            color: #444;
-            line-height: 1.8;
-            margin: 0;
-            padding-left: 20px;
-        }
         
-        /* Khung chứa Chatbot */
-        .chatbot-container {
+        /* KIỂU 1: KHUNG CHAT CỐ ĐỊNH TRONG Ô VUÔNG */
+        .chatbot-fixed-box {
             width: 100%;
-            height: 550px;
-            border: 1px solid #e0e0e0;
+            height: 500px;
+            border: 1px solid #ddd;
             border-radius: 8px;
             overflow: hidden;
-            position: relative;
             background-color: #fff;
+            position: relative;
+            margin-bottom: 20px;
         }
 
-        df-messenger {
+        /* Ép khung chat hiển thị cố định trong Container */
+        .chatbot-fixed-box df-messenger {
             position: static !important;
-            --df-messenger-button-titlebar-color: #007bff;
-            --df-messenger-chat-background-color: #ffffff;
-            --df-messenger-font-color: #333;
-            --df-messenger-user-message: #007bff;
+            display: block !important;
         }
-        
-        df-messenger-chat {
-            position: static !important;
-            height: 550px !important;
+        .chatbot-fixed-box df-messenger-chat {
+            height: 500px !important;
             width: 100% !important;
+            position: static !important;
+            display: block !important;
         }
+
+        /* KIỂU 2: NÚT BẤM NỔI Ở GÓC MÀN HÌNH */
+        /* Chúng ta sẽ dùng thêm một thẻ df-messenger thứ hai ở cuối body */
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Hệ Thống Tra Cứu Luật Thủ Tục Hành Chính</h1>
-        <p class="description">Chào mừng bạn! Hệ thống giúp bạn tra cứu nhanh các quy định pháp luật hiện hành về:</p>
         
         <div class="law-list">
             <h3>Nội dung tra cứu trọng tâm:</h3>
             <ul>
-                <li><strong>Luật Hôn nhân và Gia đình:</strong> Tra cứu quy định về điều kiện kết hôn, hồ sơ và thẩm quyền đăng ký kết hôn.</li>
-                <li><strong>Luật Căn cước:</strong> Tra cứu quy định về trình tự, thủ tục cấp đổi, cấp lại thẻ Căn cước công dân gắn chip.</li>
-                <li><strong>Luật Đất đai:</strong> Tra cứu các quy định về hồ sơ, trình tự và thời gian giải quyết cấp lại Sổ đỏ bị mất.</li>
+                <li><strong>Luật Hôn nhân và Gia đình:</strong> Tra cứu quy định điều kiện, hồ sơ kết hôn.</li>
+                <li><strong>Luật Căn cước:</strong> Trình tự cấp đổi, cấp lại thẻ CCCD.</li>
+                <li><strong>Luật Đất đai:</strong> Quy định về cấp lại Sổ đỏ bị mất.</li>
             </ul>
         </div>
 
-        <div class="chatbot-container">
+        <div class="chatbot-fixed-box">
             <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
             <df-messenger
               intent="WELCOME"
-              chat-title="Trợ Lý Tra Cứu Luật TTHC"
+              chat-title="Khung Tra Cứu Tại Chỗ"
               agent-id="beb30889-a174-4fd7-b494-b2a3fe16a795"
               language-code="vi"
-              expand="true">
+              expand="true"> 
             </df-messenger>
         </div>
+        <p style="color: #888; font-style: italic;">Bạn cũng có thể sử dụng nút hỗ trợ nhanh ở góc dưới màn hình.</p>
     </div>
+
+    <df-messenger
+      intent="WELCOME"
+      chat-title="Hỗ Trợ Nhanh"
+      agent-id="beb30889-a174-4fd7-b494-b2a3fe16a795"
+      language-code="vi">
+    </df-messenger>
+
 </body>
 </html>
