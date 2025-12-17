@@ -3,50 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dự án Chatbot 3 TTHC (Miễn Phí)</title>
+    <title>Dự án Chatbot Tra cứu Luật TTHC</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 20px;
-            background-color: #f4f7f6;
-            text-align: center;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
         }
         .container {
-            max-width: 800px;
-            margin: 0 auto;
+            width: 100%;
+            max-width: 850px;
             background-color: #ffffff;
             padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            text-align: center;
         }
         h1 {
             color: #007bff;
+            margin-top: 0;
+            text-transform: uppercase;
+            font-size: 1.6em;
         }
-        p {
+        .description {
             color: #555;
+            font-size: 1.1em;
             margin-bottom: 20px;
+        }
+        .law-list {
+            text-align: left;
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border-left: 5px solid #007bff;
+        }
+        .law-list h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        ul {
+            color: #444;
+            line-height: 1.8;
+            margin: 0;
+            padding-left: 20px;
+        }
+        
+        /* Khung chứa Chatbot */
+        .chatbot-container {
+            width: 100%;
+            height: 550px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+            background-color: #fff;
+        }
+
+        df-messenger {
+            position: static !important;
+            --df-messenger-button-titlebar-color: #007bff;
+            --df-messenger-chat-background-color: #ffffff;
+            --df-messenger-font-color: #333;
+            --df-messenger-user-message: #007bff;
+        }
+        
+        df-messenger-chat {
+            position: static !important;
+            height: 550px !important;
+            width: 100% !important;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>DỰ ÁN CHATBOT TRA CỨU TTHC ĐƠN GIẢN</h1>
-        <p>Chatbot đã sẵn sàng. Hãy thử hỏi về 3 thủ tục:</p>
-        <ul>
-            <li>**Đăng ký Kết hôn** (Ví dụ: "thủ tục làm giấy hôn thú")</li>
-            <li>**Cấp lại CCCD** (Ví dụ: "làm lại cccd gắn chip")</li>
-            <li>**Cấp lại Sổ đỏ** (Ví dụ: "tôi bị mất sổ đỏ")</li>
-        </ul>
-    </div>
+        <h1>Hệ Thống Tra Cứu Luật Thủ Tục Hành Chính</h1>
+        <p class="description">Chào mừng bạn! Hệ thống giúp bạn tra cứu nhanh các quy định pháp luật hiện hành về:</p>
+        
+        <div class="law-list">
+            <h3>Nội dung tra cứu trọng tâm:</h3>
+            <ul>
+                <li><strong>Luật Hôn nhân và Gia đình:</strong> Tra cứu quy định về điều kiện kết hôn, hồ sơ và thẩm quyền đăng ký kết hôn.</li>
+                <li><strong>Luật Căn cước:</strong> Tra cứu quy định về trình tự, thủ tục cấp đổi, cấp lại thẻ Căn cước công dân gắn chip.</li>
+                <li><strong>Luật Đất đai:</strong> Tra cứu các quy định về hồ sơ, trình tự và thời gian giải quyết cấp lại Sổ đỏ bị mất.</li>
+            </ul>
+        </div>
 
-    <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
-    <df-messenger
-      intent="WELCOME"
-      chat-title="TTHC_Chatbot_KHKT."
-      agent-id="beb30889-a174-4fd7-b494-b2a3fe16a795"
-      language-code="vi"
-    ></df-messenger>
-    
+        <div class="chatbot-container">
+            <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+            <df-messenger
+              intent="WELCOME"
+              chat-title="Trợ Lý Tra Cứu Luật TTHC"
+              agent-id="beb30889-a174-4fd7-b494-b2a3fe16a795"
+              language-code="vi"
+              expand="true">
+            </df-messenger>
+        </div>
+    </div>
 </body>
 </html>
