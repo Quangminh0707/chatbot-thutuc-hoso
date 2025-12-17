@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dự án Chatbot Tra cứu Luật TTHC</title>
+    <title>Dự án Chatbot 3 TTHC (Miễn Phí)</title>
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: Arial, sans-serif;
             margin: 0;
             padding: 20px;
-            background-color: #f0f2f5;
+            background-color: #f4f7f6;
             text-align: center;
         }
         .container {
@@ -17,44 +17,38 @@
             margin: 0 auto;
             background-color: #ffffff;
             padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
-        h1 { color: #007bff; text-transform: uppercase; }
-        .law-info {
-            text-align: left;
-            background-color: #e7f3ff;
-            padding: 20px;
-            border-radius: 8px;
-            margin: 20px 0;
-            border: 1px solid #b6d4fe;
+        h1 {
+            color: #007bff;
         }
-        .guide-text { color: #d63384; font-weight: bold; font-size: 1.2em; }
+        p {
+            color: #555;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Hệ Thống Tra Cứu Luật TTHC</h1>
-        
-        <div class="law-info">
-            <p><strong>Chào mừng bạn! Hệ thống hỗ trợ tra cứu:</strong></p>
-            <ul>
-                <li>Quy định về Luật Hôn nhân & Gia đình</li>
-                <li>Quy định về Luật Căn cước mới nhất</li>
-                <li>Quy định về Luật Đất đai (Cấp lại sổ đỏ)</li>
-            </ul>
-        </div>
-
-        <p class="guide-text">↓↓↓ BẤM VÀO BIỂU TƯỢNG MÀU XANH Ở GÓC DƯỚI ĐỂ BẮT ĐẦU CHAT ↓↓↓</p>
+        <h1>DỰ ÁN CHATBOT TRA CỨU TTHC ĐƠN GIẢN</h1>
+        <p>Chatbot đã sẵn sàng. Hãy thử hỏi về 3 thủ tục:</p>
+        <ul>
+            <li>**Đăng ký Kết hôn** (Ví dụ: "thủ tục làm giấy hôn thú")</li>
+            <li>**Cấp lại CCCD** (Ví dụ: "làm lại cccd gắn chip")</li>
+            <li>**Cấp lại Sổ đỏ** (Ví dụ: "tôi bị mất sổ đỏ")</li>
+        </ul>
     </div>
 
     <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
     <df-messenger
       intent="WELCOME"
-      chat-title="Trợ Lý Luật TTHC"
+      chat-title="TTHC_Chatbot_KHKT."
       agent-id="beb30889-a174-4fd7-b494-b2a3fe16a795"
       language-code="vi"
-      allow-fullscreen="true">
-    </df-messenger>
+    ></df-messenger>
+    
 </body>
+
 </html>
+
