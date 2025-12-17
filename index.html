@@ -37,32 +37,20 @@
             border-left: 5px solid #007bff;
         }
         
-        /* KIỂU 1: KHUNG CHAT CỐ ĐỊNH TRONG Ô VUÔNG */
-        .chatbot-fixed-box {
+        /* CẤU HÌNH Ô VUÔNG TRẮNG CỐ ĐỊNH */
+        .chatbot-container {
             width: 100%;
-            height: 500px;
-            border: 1px solid #ddd;
+            height: 550px;
+            border: 2px solid #007bff;
             border-radius: 8px;
-            overflow: hidden;
             background-color: #fff;
-            position: relative;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
+            display: block !important; 
         }
 
-        /* Ép khung chat hiển thị cố định trong Container */
-        .chatbot-fixed-box df-messenger {
-            position: static !important;
-            display: block !important;
+        df-messenger {
+            --df-messenger-button-titlebar-color: #007bff;
         }
-        .chatbot-fixed-box df-messenger-chat {
-            height: 500px !important;
-            width: 100% !important;
-            position: static !important;
-            display: block !important;
-        }
-
-        /* KIỂU 2: NÚT BẤM NỔI Ở GÓC MÀN HÌNH */
-        /* Chúng ta sẽ dùng thêm một thẻ df-messenger thứ hai ở cuối body */
     </style>
 </head>
 <body>
@@ -78,25 +66,27 @@
             </ul>
         </div>
 
-        <div class="chatbot-fixed-box">
+        <p><strong>KHUNG TRA CỨU TẠI CHỖ:</strong></p>
+        <div class="chatbot-container">
             <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
             <df-messenger
               intent="WELCOME"
-              chat-title="Khung Tra Cứu Tại Chỗ"
+              chat-title="Trợ Lý Luật Tại Chỗ"
               agent-id="beb30889-a174-4fd7-b494-b2a3fe16a795"
               language-code="vi"
-              expand="true"> 
+              expand="true">
             </df-messenger>
         </div>
-        <p style="color: #888; font-style: italic;">Bạn cũng có thể sử dụng nút hỗ trợ nhanh ở góc dưới màn hình.</p>
+
+        <p style="color: #666; font-style: italic;">(Sử dụng nút bong bóng ở góc nếu bạn cuộn trang đi xa)</p>
     </div>
 
     <df-messenger
       intent="WELCOME"
       chat-title="Hỗ Trợ Nhanh"
       agent-id="beb30889-a174-4fd7-b494-b2a3fe16a795"
-      language-code="vi">
-    </df-messenger>
+      language-code="vi"
+      allow-fullscreen="true"> </df-messenger>
 
 </body>
 </html>
