@@ -22,34 +22,23 @@
             box-shadow: 0 8px 24px rgba(0,0,0,0.1);
             text-align: center;
         }
-        h1 {
-            color: #007bff;
-            margin-top: 0;
-            text-transform: uppercase;
-            font-size: 1.6em;
-        }
-        .law-list {
-            text-align: left;
-            background-color: #f8f9fa;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 30px;
-            border-left: 5px solid #007bff;
-        }
+        h1 { color: #007bff; margin-top: 0; text-transform: uppercase; font-size: 1.6em; }
+        .law-list { text-align: left; background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 30px; border-left: 5px solid #007bff; }
         
-        /* CẤU HÌNH Ô VUÔNG TRẮNG CỐ ĐỊNH */
-        .chatbot-container {
+        /* KHUNG CHỨA CHATBOT CỐ ĐỊNH */
+        .chatbot-inline-box {
             width: 100%;
-            height: 550px;
+            height: 600px; /* Tăng chiều cao để thấy rõ phần nhập liệu */
             border: 2px solid #007bff;
             border-radius: 8px;
             background-color: #fff;
             margin-bottom: 30px;
-            display: block !important; 
+            overflow: hidden;
         }
 
+        /* CSS ép khung chat phải hiển thị và chiếm toàn bộ ô vuông */
         df-messenger {
-            --df-messenger-button-titlebar-color: #007bff;
+            z-index: 1;
         }
     </style>
 </head>
@@ -66,27 +55,20 @@
             </ul>
         </div>
 
-        <p><strong>KHUNG TRA CỨU TẠI CHỖ:</strong></p>
-        <div class="chatbot-container">
+        <p><strong>TRA CỨU NHANH TẠI ĐÂY:</strong></p>
+        
+        <div class="chatbot-inline-box">
             <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
             <df-messenger
               intent="WELCOME"
-              chat-title="Trợ Lý Luật Tại Chỗ"
+              chat-title="Trợ Lý Tra Cứu Luật"
               agent-id="beb30889-a174-4fd7-b494-b2a3fe16a795"
               language-code="vi"
-              expand="true">
-            </df-messenger>
+              expand="true"> </df-messenger>
         </div>
 
-        <p style="color: #666; font-style: italic;">(Sử dụng nút bong bóng ở góc nếu bạn cuộn trang đi xa)</p>
+        <p style="color: #666; font-style: italic;">(Bấm vào nút bong bóng xanh ở góc phải nếu bạn muốn đóng/mở nhanh)</p>
     </div>
 
-    <df-messenger
-      intent="WELCOME"
-      chat-title="Hỗ Trợ Nhanh"
-      agent-id="beb30889-a174-4fd7-b494-b2a3fe16a795"
-      language-code="vi"
-      allow-fullscreen="true"> </df-messenger>
-
-</body>
+    </body>
 </html>
