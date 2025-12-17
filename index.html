@@ -10,72 +10,51 @@
             margin: 0;
             padding: 20px;
             background-color: #f0f2f5;
-            display: flex;
-            justify-content: center;
+            text-align: center;
         }
         .container {
-            width: 100%;
-            max-width: 850px;
+            max-width: 800px;
+            margin: 0 auto;
             background-color: #ffffff;
             padding: 30px;
             border-radius: 12px;
             box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-            text-align: center;
         }
-        h1 { color: #007bff; margin-top: 0; text-transform: uppercase; font-size: 1.6em; }
-        .law-list { text-align: left; background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 30px; border-left: 5px solid #007bff; }
-        
-        /* ĐỊNH DẠNG Ô VUÔNG TRẮNG ĐỂ CHATBOT HIỆN RA */
-        .chatbot-fixed-area {
-            width: 100%;
-            height: 600px; /* Chiều cao cố định để hiện ô nhập liệu */
-            border: 2px solid #007bff;
+        h1 { color: #007bff; text-transform: uppercase; }
+        .law-info {
+            text-align: left;
+            background-color: #e7f3ff;
+            padding: 20px;
             border-radius: 8px;
-            background-color: #fff;
-            margin-top: 20px;
-            overflow: hidden;
-            position: relative;
+            margin: 20px 0;
+            border: 1px solid #b6d4fe;
         }
-
-        /* ÉP DIALOGFLOW NẰM YÊN TRONG Ô VUÔNG */
-        df-messenger {
-            position: static !important;
-            display: flex !important;
-            flex-direction: column;
-            --df-messenger-button-titlebar-color: #007bff;
-        }
-        
-        df-messenger-chat {
-            position: static !important;
-            height: 600px !important;
-            width: 100% !important;
-        }
+        .guide-text { color: #d63384; font-weight: bold; font-size: 1.2em; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Hệ Thống Tra Cứu Luật Thủ Tục Hành Chính</h1>
+        <h1>Hệ Thống Tra Cứu Luật TTHC</h1>
         
-        <div class="law-list">
-            <h3>Nội dung tra cứu trọng tâm:</h3>
+        <div class="law-info">
+            <p><strong>Chào mừng bạn! Hệ thống hỗ trợ tra cứu:</strong></p>
             <ul>
-                <li><strong>Luật Hôn nhân và Gia đình:</strong> Tra cứu quy định điều kiện, hồ sơ kết hôn.</li>
-                <li><strong>Luật Căn cước:</strong> Trình tự cấp đổi, cấp lại thẻ CCCD.</li>
-                <li><strong>Luật Đất đai:</strong> Quy định về cấp lại Sổ đỏ bị mất.</li>
+                <li>Quy định về Luật Hôn nhân & Gia đình</li>
+                <li>Quy định về Luật Căn cước mới nhất</li>
+                <li>Quy định về Luật Đất đai (Cấp lại sổ đỏ)</li>
             </ul>
         </div>
 
-        <p><strong>TRA CỨU LUẬT TRỰC TIẾP TẠI KHUNG DƯỚI ĐÂY:</strong></p>
-        
-        <div class="chatbot-fixed-area">
-            <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
-            <df-messenger
-              intent="WELCOME"
-              chat-title="Trợ Lý Luật TTHC"
-              agent-id="beb30889-a174-4fd7-b494-b2a3fe16a795"
-              language-code="vi"
-              expand="true"> </df-messenger>
-        </div>
+        <p class="guide-text">↓↓↓ BẤM VÀO BIỂU TƯỢNG MÀU XANH Ở GÓC DƯỚI ĐỂ BẮT ĐẦU CHAT ↓↓↓</p>
     </div>
+
+    <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+    <df-messenger
+      intent="WELCOME"
+      chat-title="Trợ Lý Luật TTHC"
+      agent-id="beb30889-a174-4fd7-b494-b2a3fe16a795"
+      language-code="vi"
+      allow-fullscreen="true">
+    </df-messenger>
 </body>
 </html>
