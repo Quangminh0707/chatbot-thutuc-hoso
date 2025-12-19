@@ -4,197 +4,146 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TTHC_Chatbot - Hệ thống tra cứu</title>
+    <!-- Thư viện icon -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <style>
-        /* Biến CSS để tùy chỉnh màu sắc và kích thước bot */
-        :root {
-            --df-messenger-chat-window-height: 500px; /* Chiều cao khung chat */
-            --df-messenger-chat-background-color: #ffffff;
-            --df-messenger-send-icon: #1a73e8;
-            --df-messenger-button-titlebar-color: #f8f9fa;
-        }
+        /* CSS GIAO DIỆN TỔNG THỂ */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { display: flex; height: 100vh; background-color: #ffffff; overflow: hidden; }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        }
-
-        body {
-            display: flex;
-            height: 100vh;
-            background-color: #ffffff;
-            overflow: hidden;
-        }
-
-        /* Sidebar bên trái */
-        .sidebar {
-            width: 260px;
-            background-color: #f9f9f9;
-            display: flex;
-            flex-direction: column;
-            padding: 15px;
-            border-right: 1px solid #e5e5e5;
-            flex-shrink: 0;
-        }
-
-        .sidebar-item {
-            display: flex;
-            align-items: center;
-            padding: 12px;
-            border-radius: 8px;
-            cursor: pointer;
-            color: #000;
-            font-size: 14px;
-            margin-bottom: 5px;
-            border: none;
-            background: none;
-            width: 100%;
-            text-align: left;
-            transition: background 0.2s;
-        }
+        /* Sidebar bên trái giống ChatGPT */
+        .sidebar { width: 260px; background-color: #f9f9f9; padding: 15px; border-right: 1px solid #e5e5e5; display: flex; flex-direction: column; flex-shrink: 0; }
+        .sidebar-item { display: flex; align-items: center; padding: 12px; border-radius: 8px; cursor: pointer; font-size: 14px; border: none; background: none; width: 100%; text-align: left; margin-bottom: 5px; transition: 0.2s; }
         .sidebar-item:hover { background-color: #ececec; }
-        .sidebar-item i { margin-right: 12px; width: 16px; text-align: center; }
+        .sidebar-item i { margin-right: 12px; width: 20px; text-align: center; color: #676767; }
 
-        /* Vùng nội dung chính */
-        .main-container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            height: 100vh;
-            overflow-y: auto;
-        }
+        /* Vùng nội dung chính bên phải */
+        .main-container { flex: 1; display: flex; flex-direction: column; align-items: center; background-color: #fff; position: relative; }
+        .top-nav { width: 100%; padding: 15px 25px; font-weight: 600; font-size: 18px; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; }
 
-        .top-nav {
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 20px;
-            height: 60px;
-        }
+        /* Khu vực giữa màn hình */
+        .content-area { width: 100%; max-width: 850px; flex: 1; display: flex; flex-direction: column; align-items: center; padding: 20px; text-align: center; overflow-y: auto; }
 
-        /* Khu vực trung tâm */
-        .content-area {
-            width: 100%;
-            max-width: 800px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 40px 20px;
-            text-align: center;
-        }
-
-        /* Phần nội dung yêu cầu */
-        .header-section { margin-bottom: 30px; }
+        /* Tiêu đề dự án - LÀM NỔI BẬT THEO YÊU CẦU */
+        .project-header { margin-top: 20px; margin-bottom: 30px; }
+        .project-title { color: #1a73e8; font-size: 28px; font-weight: 800; text-transform: uppercase; margin-bottom: 15px; display: block; }
+        .project-subtitle { font-size: 18px; color: #444; margin-bottom: 15px; font-weight: 500; }
         
-        .highlight-title {
-            color: #1a73e8;
-            font-size: 28px;
-            font-weight: 800;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-            display: block;
-        }
+        .procedure-box { text-align: left; background: #f8f9fa; padding: 20px 30px; border-radius: 15px; border: 1px solid #eee; width: 100%; max-width: 650px; line-height: 1.8; margin-bottom: 25px; }
+        .procedure-box li { list-style: none; font-size: 16px; color: #333; }
+        .procedure-box li i { color: #1a73e8; margin-right: 10px; }
 
-        .sub-text {
-            font-size: 18px;
-            color: #444;
-            margin-bottom: 15px;
-        }
-
-        .list-items {
-            text-align: left;
-            font-size: 16px;
-            line-height: 2;
-            color: #333;
-            display: inline-block;
-        }
-
-        /* CONTAINER CHO CHATBOT TÍCH HỢP */
-        #chatbot-integration {
+        /* ============================================================ */
+        /* PHẦN QUAN TRỌNG NHẤT: ÉP CHATBOT VÀO GIỮA & XÓA BONG BÓNG */
+        /* ============================================================ */
+        
+        #chatbot-frame {
             width: 100%;
-            max-width: 720px;
-            margin-top: 20px;
+            max-width: 750px; /* Độ rộng khung chat */
+            height: 500px;    /* Chiều cao khung chat */
+            position: relative;
             border: 1px solid #e5e5e5;
             border-radius: 20px;
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            background: #fff;
         }
 
-        /* Loại bỏ hoàn toàn bóng ma của launcher mặc định nếu có */
-        df-messenger {
-            display: block !important;
-            width: 100% !important;
+        /* 1. Ẩn nút bong bóng tròn (Launcher) */
+        df-messenger::part(launcher) {
+            display: none !important;
+        }
+
+        /* 2. Ép khung chat hiển thị trực tiếp, không bay lơ lửng */
+        df-messenger::part(chat-wrapper) {
             position: static !important;
+            height: 100% !important;
+            width: 100% !important;
+            bottom: unset !important;
+            right: unset !important;
+            box-shadow: none !important;
+        }
+
+        /* 3. Tùy chỉnh màu sắc bên trong bot */
+        df-messenger {
+            --df-messenger-button-titlebar-color: #f8f9fa;
+            --df-messenger-send-icon: #1a73e8;
+            --df-messenger-user-message: #e7f3ff;
+            --df-messenger-font-color: #000;
+            display: block;
+            height: 100%;
         }
     </style>
 </head>
 <body>
 
+    <!-- Sidebar giống ChatGPT -->
     <aside class="sidebar">
-        <div style="margin-bottom: 20px;"><i class="fa-solid fa-bars"></i></div>
+        <div style="margin-bottom: 20px; font-size: 20px; color: #676767;"><i class="fa-solid fa-bars"></i></div>
+        
         <button class="sidebar-item" onclick="createNewChat()">
             <i class="fa-regular fa-message"></i> Đoạn chat mới
         </button>
+        
         <button class="sidebar-item"><i class="fa-solid fa-magnifying-glass"></i> Tìm kiếm</button>
         <button class="sidebar-item"><i class="fa-regular fa-image"></i> Ảnh</button>
         <button class="sidebar-item"><i class="fa-solid fa-grid-2"></i> Ứng dụng</button>
     </aside>
 
     <main class="main-container">
+        <!-- Thanh Nav trên cùng -->
         <header class="top-nav">
-            <div style="font-weight:600">TTHC_Chatbot <i class="fa-solid fa-chevron-down"></i></div>
-            <div style="display:flex; gap:15px; color:#676767">
-                <i class="fa-solid fa-user-plus"></i><i class="fa-solid fa-circle-notch"></i>
-            </div>
+            <div>TTHC_Chatbot <i class="fa-solid fa-chevron-down" style="font-size: 12px; margin-left: 5px;"></i></div>
+            <div style="color: #676767;"><i class="fa-solid fa-user-plus" style="margin-right: 15px;"></i><i class="fa-solid fa-circle-notch"></i></div>
         </header>
 
+        <!-- Nội dung giữa màn hình -->
         <div class="content-area">
-            <!-- Phần văn bản thay đổi theo yêu cầu của bạn -->
-            <div class="header-section">
-                <span class="highlight-title">DỰ ÁN CHATBOT TRA CỨU TTHC ĐƠN GIẢN</span>
-                <p class="sub-text">Chatbot đã sẵn sàng. Hãy thử hỏi về 3 thủ tục:</p>
-                <div class="list-items">
-                    • Quy định về Luật Hôn nhân & Gia đình <br>
-                    • Quy định về Luật Căn cước mới nhất <br>
-                    • Quy định về Luật Đất đai (Cấp lại sổ đỏ)
-                </div>
+            <div class="project-header">
+                <h1 class="project-title">DỰ ÁN CHATBOT TRA CỨU TTHC ĐƠN GIẢN</h1>
+                <p class="project-subtitle">Chatbot đã sẵn sàng. Hãy thử hỏi về 3 thủ tục:</p>
             </div>
 
-            <!-- Nơi chứa khung chat nhúng trực tiếp -->
-            <div id="chatbot-integration">
-                <!-- Chatbot sẽ tự nạp vào đây thông qua JavaScript -->
+            <ul class="procedure-box">
+                <li><i class="fa-solid fa-circle-check"></i> Quy định về Luật Hôn nhân & Gia đình</li>
+                <li><i class="fa-solid fa-circle-check"></i> Quy định về Luật Căn cước mới nhất</li>
+                <li><i class="fa-solid fa-circle-check"></i> Quy định về Luật Đất đai (Cấp lại sổ đỏ)</li>
+            </ul>
+
+            <!-- Khung chứa Chatbot -->
+            <div id="chatbot-frame">
+                <!-- Script và thẻ bot sẽ được chèn vào đây -->
             </div>
         </div>
     </main>
 
+    <!-- Script Dialogflow -->
     <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
     
     <script>
+        // Hàm này sẽ xóa bot cũ và tạo bot mới hoàn toàn
         function createNewChat() {
-            const container = document.getElementById('chatbot-integration');
-            container.innerHTML = ''; // Xóa sạch để làm mới
-
-            // TẠO THẺ PARENT
-            const dfMessenger = document.createElement('df-messenger');
-            dfMessenger.setAttribute('agent-id', 'beb30889-a174-4fd7-b494-b2a3fe16a795');
-            dfMessenger.setAttribute('language-code', 'vi');
-
-            // TẠO THẺ CHILD ĐỂ ÉP CHẾ ĐỘ NHÚNG (INLINE)
-            // Đây là bí quyết để xóa bong bóng chat
-            const dfChat = document.createElement('df-messenger-chat');
-            dfChat.setAttribute('chat-title', 'TTHC_Chatbot_KHKT');
-            dfChat.setAttribute('intent', 'WELCOME');
-
-            dfMessenger.appendChild(dfChat);
-            container.appendChild(dfMessenger);
+            const frame = document.getElementById('chatbot-frame');
+            frame.innerHTML = ''; // Xóa sạch nội dung cũ bên trong khung
+            
+            // Tạo thẻ chatbot mới
+            const dfBot = document.createElement('df-messenger');
+            
+            // Cài đặt thông số của bạn từ ảnh Console
+            dfBot.setAttribute('intent', 'WELCOME');
+            dfBot.setAttribute('chat-title', 'TTHC_Chatbot_KHKT');
+            dfBot.setAttribute('agent-id', 'beb30889-a174-4fd7-b494-b2a3fe16a795');
+            dfBot.setAttribute('language-code', 'vi');
+            dfBot.setAttribute('expand', 'true'); // Ép khung chat luôn mở
+            
+            // Chèn bot vào khung ở giữa
+            frame.appendChild(dfBot);
         }
 
-        // Chạy lần đầu khi mở trang
+        // Tự động chạy khi vừa mở trang web
         window.onload = createNewChat;
     </script>
+
 </body>
 </html>
