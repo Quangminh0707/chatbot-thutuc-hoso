@@ -6,6 +6,13 @@
     <title>TTHC_Chatbot - Hệ thống tra cứu</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
+        :root {
+            --df-messenger-button-titlebar-color: #f4f4f4;
+            --df-messenger-send-icon: #1a73e8;
+            --df-messenger-user-message: #e7f3ff;
+            --df-messenger-chat-background-color: #ffffff;
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
@@ -28,6 +35,7 @@
             flex-direction: column;
             padding: 15px;
             border-right: 1px solid #e5e5e5;
+            flex-shrink: 0;
         }
 
         .sidebar-header {
@@ -40,7 +48,7 @@
         .sidebar-item {
             display: flex;
             align-items: center;
-            padding: 10px;
+            padding: 12px;
             border-radius: 8px;
             cursor: pointer;
             color: #000;
@@ -63,7 +71,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            position: relative;
+            height: 100vh;
         }
 
         /* Top Nav */
@@ -78,7 +86,7 @@
 
         .brand-version { font-weight: 600; font-size: 18px; display: flex; align-items: center; }
 
-        /* Khu vực hiển thị nội dung */
+        /* Khu vực hiển thị nội dung giữa */
         .content-area {
             width: 100%;
             max-width: 800px;
@@ -86,12 +94,11 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding-top: 20px;
+            padding: 20px;
             text-align: center;
             overflow-y: auto;
         }
 
-        /* Tiêu đề dự án nổi bật */
         .project-title {
             color: #1a73e8;
             font-size: 26px;
@@ -100,23 +107,17 @@
             text-transform: uppercase;
         }
 
-        .sub-title {
-            font-size: 16px;
-            color: #444;
-            margin-bottom: 15px;
-        }
-
         .procedure-list {
             list-style: none;
             text-align: left;
             background: #f8f9fa;
-            padding: 15px;
+            padding: 15px 25px;
             border-radius: 12px;
             margin-bottom: 20px;
             border: 1px solid #eee;
-            line-height: 1.6;
-            width: 90%;
-            font-size: 14px;
+            line-height: 1.8;
+            width: 100%;
+            max-width: 650px;
         }
 
         .procedure-list li i {
@@ -124,38 +125,43 @@
             margin-right: 10px;
         }
 
-        /* Container chứa chatbot */
-        #chatbot-container {
+        /* KHU VỰC QUAN TRỌNG: ÉP CHATBOT VÀO GIỮA */
+        #chatbot-wrapper {
             width: 100%;
-            max-width: 720px;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
+            max-width: 750px; /* Độ rộng khung chat giống ChatGPT */
+            height: 500px;    /* Chiều cao khung chat */
+            margin-top: 10px;
+            position: relative;
         }
 
-        /* CSS ép khung chat của Dialogflow hiển thị cố định */
+        /* Ẩn bong bóng và ép khung hiển thị trực tiếp */
         df-messenger {
-            --df-messenger-chat-window-height: 400px;
-            --df-messenger-button-titlebar-color: #f4f4f4;
-            --df-messenger-send-icon: #1a73e8;
-            position: relative !important;
-            width: 100% !important;
-            z-index: 1;
+            position: absolute !important;
+            inset: 0 !important;
+            z-index: 100;
         }
 
-        /* Ẩn bong bóng launcher */
-        df-messenger >>> .df-messenger-wrapper .launcher {
+        /* Kỹ thuật đặc biệt để ẩn nút bấm (launcher) và tiêu đề thừa của Dialogflow */
+        df-messenger {
+            --df-messenger-chat-window-height: 100%;
+            --df-messenger-chat-window-width: 100%;
+        }
+
+        /* Style để ẩn nút launcher bằng CSS Shadow DOM (quan trọng) */
+        df-messenger::part(launcher) {
             display: none !important;
         }
-        
-        /* Hiển thị khung chat trực tiếp */
-        df-messenger >>> df-messenger-chat {
-            display: block !important;
-            position: relative !important;
-            height: 400px !important;
-            border: 1px solid #ddd;
-            border-radius: 20px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+
+        /* Tùy chỉnh khung chat thông qua các thuộc tính part */
+        df-messenger::part(chat-wrapper) {
+            position: relative;
+            bottom: 0;
+            right: 0;
+            height: 100%;
+            width: 100%;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            border-radius: 15px;
+            border: 1px solid #e5e5e5;
         }
     </style>
 </head>
@@ -165,14 +171,12 @@
     <aside class="sidebar">
         <div class="sidebar-header">
             <i class="fa-solid fa-bars" style="cursor: pointer; color: #676767;"></i>
-            <i class="fa-regular fa-pen-to-square" style="cursor: pointer; color: #676767;"></i>
+            <i class="fa-regular fa-pen-to-square" style="cursor: pointer; color: #676767;" onclick="createNewChat()"></i>
         </div>
         
-        <!-- Nút Đoạn chat mới có thêm sự kiện onclick -->
         <button class="sidebar-item" onclick="createNewChat()">
             <i class="fa-regular fa-message"></i> Đoạn chat mới
         </button>
-        
         <button class="sidebar-item"><i class="fa-solid fa-magnifying-glass"></i> Tìm kiếm</button>
         <button class="sidebar-item"><i class="fa-regular fa-image"></i> Ảnh</button>
         <button class="sidebar-item"><i class="fa-solid fa-grid-2"></i> Ứng dụng</button>
@@ -191,7 +195,7 @@
 
         <div class="content-area">
             <h1 class="project-title">DỰ ÁN CHATBOT TRA CỨU TTHC ĐƠN GIẢN</h1>
-            <p class="sub-title">Chatbot đã sẵn sàng. Hãy thử hỏi về 3 thủ tục:</p>
+            <p style="margin-bottom: 10px; color: #555;">Chatbot đã sẵn sàng. Hãy thử hỏi về 3 thủ tục:</p>
             
             <ul class="procedure-list">
                 <li><i class="fa-solid fa-circle-check"></i> Quy định về Luật Hôn nhân & Gia đình</li>
@@ -199,38 +203,29 @@
                 <li><i class="fa-solid fa-circle-check"></i> Quy định về Luật Đất đai (Cấp lại sổ đỏ)</li>
             </ul>
 
-            <!-- Container chứa Chatbot -->
-            <div id="chatbot-container">
-                <!-- Chatbot sẽ được chèn vào đây bởi script bên dưới -->
-            </div>
+            <!-- Đây là nơi khung chat sẽ xuất hiện -->
+            <div id="chatbot-wrapper"></div>
         </div>
     </main>
 
     <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
     
     <script>
-        // Hàm để tạo mới đoạn chat
         function createNewChat() {
-            const container = document.getElementById('chatbot-container');
+            const wrapper = document.getElementById('chatbot-wrapper');
+            wrapper.innerHTML = ''; // Xóa chat cũ
             
-            // 1. Xóa bỏ chatbot cũ (nếu có)
-            container.innerHTML = '';
+            const chatElement = document.createElement('df-messenger');
+            chatElement.setAttribute('intent', 'WELCOME');
+            chatElement.setAttribute('chat-title', 'TTHC_Chatbot_KHKT');
+            chatElement.setAttribute('agent-id', 'beb30889-a174-4fd7-b494-b2a3fe16a795');
+            chatElement.setAttribute('language-code', 'vi');
+            chatElement.setAttribute('expand', 'true'); // Ép khung chat luôn mở
             
-            // 2. Tạo một thẻ df-messenger mới
-            const newMessenger = document.createElement('df-messenger');
-            
-            // 3. Thiết lập các thông số (giống hệt agent của bạn)
-            newMessenger.setAttribute('intent', 'WELCOME');
-            newMessenger.setAttribute('chat-title', 'TTHC_Chatbot_KHKT');
-            newMessenger.setAttribute('agent-id', 'beb30889-a174-4fd7-b494-b2a3fe16a795');
-            newMessenger.setAttribute('language-code', 'vi');
-            newMessenger.setAttribute('expand', 'true'); // Tự động mở khung chat
-            
-            // 4. Chèn vào container
-            container.appendChild(newMessenger);
+            wrapper.appendChild(chatElement);
         }
 
-        // Tự động gọi hàm tạo chat khi trang vừa load xong lần đầu
+        // Tự khởi động chat khi load trang
         window.onload = createNewChat;
     </script>
 
