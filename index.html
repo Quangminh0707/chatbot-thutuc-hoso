@@ -8,24 +8,22 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        /* CSS GIAO DIỆN TỔNG THỂ */
+        /* CSS GIAO DIỆN TỔNG THỂ CỦA BẠN */
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { display: flex; height: 100vh; background-color: #ffffff; overflow: hidden; }
 
-        /* Sidebar bên trái giống ChatGPT */
+        /* Sidebar */
         .sidebar { width: 260px; background-color: #f9f9f9; padding: 15px; border-right: 1px solid #e5e5e5; display: flex; flex-direction: column; flex-shrink: 0; }
         .sidebar-item { display: flex; align-items: center; padding: 12px; border-radius: 8px; cursor: pointer; font-size: 14px; border: none; background: none; width: 100%; text-align: left; margin-bottom: 5px; transition: 0.2s; }
         .sidebar-item:hover { background-color: #ececec; }
         .sidebar-item i { margin-right: 12px; width: 20px; text-align: center; color: #676767; }
 
-        /* Vùng nội dung chính bên phải */
+        /* Vùng nội dung chính */
         .main-container { flex: 1; display: flex; flex-direction: column; align-items: center; background-color: #fff; position: relative; }
         .top-nav { width: 100%; padding: 15px 25px; font-weight: 600; font-size: 18px; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; }
-
-        /* Khu vực giữa màn hình */
         .content-area { width: 100%; max-width: 850px; flex: 1; display: flex; flex-direction: column; align-items: center; padding: 20px; text-align: center; overflow-y: auto; }
 
-        /* Tiêu đề dự án - LÀM NỔI BẬT THEO YÊU CẦU */
+        /* Tiêu đề dự án */
         .project-header { margin-top: 20px; margin-bottom: 30px; }
         .project-title { color: #1a73e8; font-size: 28px; font-weight: 800; text-transform: uppercase; margin-bottom: 15px; display: block; }
         .project-subtitle { font-size: 18px; color: #444; margin-bottom: 15px; font-weight: 500; }
@@ -34,14 +32,11 @@
         .procedure-box li { list-style: none; font-size: 16px; color: #333; }
         .procedure-box li i { color: #1a73e8; margin-right: 10px; }
 
-        /* ============================================================ */
-        /* PHẦN QUAN TRỌNG NHẤT: ÉP CHATBOT VÀO GIỮA & XÓA BONG BÓNG */
-        /* ============================================================ */
-        
+        /* KHUNG CHATBOT */
         #chatbot-frame {
             width: 100%;
-            max-width: 750px; /* Độ rộng khung chat */
-            height: 500px;    /* Chiều cao khung chat */
+            max-width: 750px;
+            height: 500px;
             position: relative;
             border: 1px solid #e5e5e5;
             border-radius: 20px;
@@ -50,59 +45,73 @@
             background: #fff;
         }
 
-        /* 1. Ẩn nút bong bóng tròn (Launcher) */
-        df-messenger::part(launcher) {
-            display: none !important;
+        /* TÙY CHỈNH NÚT MICRO (VOICE CHAT) */
+        .voice-control-ui {
+            position: absolute;
+            bottom: 15px;
+            right: 70px; /* Đặt cạnh nút gửi mặc định của bot */
+            z-index: 9999;
         }
 
-        /* 2. Ép khung chat hiển thị trực tiếp, không bay lơ lửng */
+        #mic-btn {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            border: none;
+            background: #1a73e8;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: 0.3s;
+        }
+
+        #mic-btn.recording {
+            background: #ea4335;
+            animation: pulse-ring 1.5s infinite;
+        }
+
+        @keyframes pulse-ring {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(234, 67, 53, 0.7); }
+            70% { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(234, 67, 53, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(234, 67, 53, 0); }
+        }
+
+        /* Ẩn bong bóng tròn mặc định của Dialogflow */
+        df-messenger::part(launcher) { display: none !important; }
         df-messenger::part(chat-wrapper) {
             position: static !important;
             height: 100% !important;
             width: 100% !important;
-            bottom: unset !important;
-            right: unset !important;
             box-shadow: none !important;
-        }
-
-        /* 3. Tùy chỉnh màu sắc bên trong bot */
-        df-messenger {
-            --df-messenger-button-titlebar-color: #f8f9fa;
-            --df-messenger-send-icon: #1a73e8;
-            --df-messenger-user-message: #e7f3ff;
-            --df-messenger-font-color: #000;
-            display: block;
-            height: 100%;
         }
     </style>
 </head>
 <body>
 
-    <!-- Sidebar giống ChatGPT -->
     <aside class="sidebar">
         <div style="margin-bottom: 20px; font-size: 20px; color: #676767;"><i class="fa-solid fa-bars"></i></div>
-        
         <button class="sidebar-item" onclick="createNewChat()">
             <i class="fa-regular fa-message"></i> Đoạn chat mới
         </button>
-        
         <button class="sidebar-item"><i class="fa-solid fa-magnifying-glass"></i> Tìm kiếm</button>
         <button class="sidebar-item"><i class="fa-regular fa-image"></i> Ảnh</button>
         <button class="sidebar-item"><i class="fa-solid fa-grid-2"></i> Ứng dụng</button>
     </aside>
 
     <main class="main-container">
-        <!-- Thanh Nav trên cùng -->
         <header class="top-nav">
             <div>TTHC_Chatbot <i class="fa-solid fa-chevron-down" style="font-size: 12px; margin-left: 5px;"></i></div>
             <div style="color: #676767;"><i class="fa-solid fa-user-plus" style="margin-right: 15px;"></i><i class="fa-solid fa-circle-notch"></i></div>
         </header>
 
-        <!-- Nội dung giữa màn hình -->
         <div class="content-area">
             <div class="project-header">
                 <h1 class="project-title">DỰ ÁN CHATBOT TRA CỨU TTHC ĐƠN GIẢN</h1>
-                <p class="project-subtitle">Chatbot đã sẵn sàng. Hãy thử hỏi về 3 thủ tục:</p>
+                <p class="project-subtitle">Chatbot đã sẵn sàng. Hãy thử hỏi hoặc nhấn Micro để nói:</p>
             </div>
 
             <ul class="procedure-box">
@@ -111,9 +120,15 @@
                 <li><i class="fa-solid fa-circle-check"></i> Quy định về Luật Đất đai (Cấp lại sổ đỏ)</li>
             </ul>
 
-            <!-- Khung chứa Chatbot -->
             <div id="chatbot-frame">
-                <!-- Script và thẻ bot sẽ được chèn vào đây -->
+                <!-- Nút Voice Chat -->
+                <div class="voice-control-ui">
+                    <button id="mic-btn" title="Nói tiếng Việt">
+                        <i class="fa-solid fa-microphone"></i>
+                    </button>
+                </div>
+                <!-- Dialogflow Bot sẽ được chèn vào đây -->
+                <div id="bot-container" style="height: 100%;"></div>
             </div>
         </div>
     </main>
@@ -122,62 +137,81 @@
     <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
     
     <script>
-        // Hàm này sẽ xóa bot cũ và tạo bot mới hoàn toàn
+        // 1. KHỞI TẠO CHATBOT
         function createNewChat() {
-            const frame = document.getElementById('chatbot-frame');
-            frame.innerHTML = ''; // Xóa sạch nội dung cũ bên trong khung
+            const container = document.getElementById('bot-container');
+            container.innerHTML = ''; 
             
-            // Tạo thẻ chatbot mới
             const dfBot = document.createElement('df-messenger');
-            
-            // Cài đặt thông số của bạn từ ảnh Console
             dfBot.setAttribute('intent', 'WELCOME');
             dfBot.setAttribute('chat-title', 'TTHC_Chatbot_KHKT');
             dfBot.setAttribute('agent-id', 'beb30889-a174-4fd7-b494-b2a3fe16a795');
             dfBot.setAttribute('language-code', 'vi');
-            dfBot.setAttribute('expand', 'true'); // Ép khung chat luôn mở
+            dfBot.setAttribute('expand', 'true');
             
-            // Chèn bot vào khung ở giữa
-            frame.appendChild(dfBot);
+            container.appendChild(dfBot);
+
+            // Lắng nghe bot trả lời để đọc tiếng (TTS)
+            dfBot.addEventListener('df-response-received', function (event) {
+                const speechText = event.detail.response.queryResult.fulfillmentText;
+                if (speechText) speak(speechText);
+            });
         }
 
-        // Tự động chạy khi vừa mở trang web
         window.onload = createNewChat;
-    </script>
 
+        // 2. NHẬN DIỆN GIỌNG NÓI (STT)
+        const micBtn = document.getElementById('mic-btn');
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+        if (SpeechRecognition) {
+            const recognition = new SpeechRecognition();
+            recognition.lang = 'vi-VN';
+            recognition.interimResults = false;
+
+            micBtn.onclick = () => {
+                recognition.start();
+                micBtn.classList.add('recording');
+            };
+
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                console.log("Bạn nói: " + transcript);
+
+                // GỬI CÂU HỎI VÀO BOT (Không gây ghi đè)
+                const messenger = document.querySelector('df-messenger');
+                if (messenger) {
+                    messenger.sendQuery(transcript);
+                }
+                micBtn.classList.remove('recording');
+            };
+
+            recognition.onspeechend = () => {
+                recognition.stop();
+                micBtn.classList.remove('recording');
+            };
+
+            recognition.onerror = () => {
+                micBtn.classList.remove('recording');
+            };
+        }
+
+        // 3. PHÁT GIỌNG NÓI TIẾNG VIỆT (TTS)
+        function speak(text) {
+            // Ngừng mọi âm thanh đang phát trước đó
+            window.speechSynthesis.cancel();
+
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'vi-VN';
+            utterance.rate = 1.0; 
+
+            // Cố gắng tìm giọng tiếng Việt trong hệ thống
+            const voices = window.speechSynthesis.getVoices();
+            const viVoice = voices.find(v => v.lang.includes('vi'));
+            if (viVoice) utterance.voice = viVoice;
+
+            window.speechSynthesis.speak(utterance);
+        }
+    </script>
 </body>
 </html>
-/* Nút Mic cố định trên màn hình, không bị Dialogflow đè */
-.voice-wrapper {
-    position: fixed; /* Cố định vị trí */
-    bottom: 35px;    /* Cách đáy 35px - khớp với thanh nhập liệu */
-    left: 50%;       /* Căn giữa theo màn hình */
-    transform: translateX(110px); /* Đẩy sang phải để nằm cạnh ô nhập liệu */
-    z-index: 999999; /* Ưu tiên cao nhất */
-}
-
-#mic-btn {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    border: none;
-    background-color: #1a73e8;
-    color: white;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-    transition: 0.3s;
-}
-
-#mic-btn.recording {
-    background-color: #ea4335;
-    animation: mic-pulse 1.5s infinite;
-}
-
-@keyframes mic-pulse {
-    0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(234, 67, 53, 0.7); }
-    70% { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(234, 67, 53, 0); }
-    100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(234, 67, 53, 0); }
-}
