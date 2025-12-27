@@ -147,3 +147,126 @@
 
 </body>
 </html>
+<!-- Thêm CSS cho nút Micro -->
+<style>
+    .voice-control {
+        position: absolute;
+        bottom: 20px;
+        right: 80px; /* Nằm cạnh khung nhập liệu của bot */
+        z-index: 999;
+    }
+    #mic-btn {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        border: none;
+        background: #1a73e8;
+        color: white;
+        cursor: pointer;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        transition: 0.3s;
+    }
+    #mic-btn.recording {
+        background: #ea4335;
+        animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+    }
+</style>
+
+<!-- Chèn nút Micro vào bên trong #chatbot-frame -->
+<div id="chatbot-frame">
+    <div class="voice-control">
+        <button id="mic-btn" title="Nói bằng tiếng Việt"><i class="fa-solid fa-microphone"></i></button>
+    </div>
+    <!-- df-messenger sẽ được script chèn vào đây -->
+</div>
+
+<script>
+    const frame = document.getElementById('chatbot-frame');
+    let dfBot;
+
+    // 1. Khởi tạo Bot
+    function createNewChat() {
+        // Xóa bot cũ nếu có (giữ lại nút mic)
+        const oldBot = document.querySelector('df-messenger');
+        if (oldBot) oldBot.remove();
+        
+        dfBot = document.createElement('df-messenger');
+        dfBot.setAttribute('intent', 'WELCOME');
+        dfBot.setAttribute('chat-title', 'TTHC_Chatbot_KHKT');
+        dfBot.setAttribute('agent-id', 'beb30889-a174-4fd7-b494-b2a3fe16a795');
+        dfBot.setAttribute('language-code', 'vi');
+        dfBot.setAttribute('expand', 'true');
+        
+        frame.appendChild(dfBot);
+
+        // Lắng nghe sự kiện bot trả lời để đọc lên
+        dfBot.addEventListener('df-response-received', function (event) {
+            const speechText = event.detail.response.queryResult.fulfillmentText;
+            speak(speechText);
+        });
+    }
+
+    window.onload = createNewChat;
+
+    // 2. Xử lý Chuyển giọng nói thành văn bản (STT)
+    const micBtn = document.getElementById('mic-btn');
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (SpeechRecognition) {
+        const recognition = new SpeechRecognition();
+        recognition.lang = 'vi-VN'; // Thiết lập tiếng Việt
+        recognition.interimResults = false;
+
+        micBtn.addEventListener('click', () => {
+            recognition.start();
+            micBtn.classList.add('recording');
+        });
+
+        recognition.onresult = (event) => {
+            const transcript = event.results[0][0].transcript;
+            console.log("Bạn đã nói: ", transcript);
+            
+            // Gửi văn bản này vào Dialogflow
+            const messenger = document.querySelector('df-messenger');
+            messenger.renderCustomText(transcript); // Hiển thị tin nhắn của bạn lên màn hình
+            messenger.sendQuery(transcript);      // Gửi thực sự tới server
+            
+            micBtn.classList.remove('recording');
+        };
+
+        recognition.onspeechend = () => {
+            recognition.stop();
+            micBtn.classList.remove('recording');
+        };
+
+        recognition.onerror = (event) => {
+            console.error("Lỗi nhận diện: ", event.error);
+            micBtn.classList.remove('recording');
+        };
+    } else {
+        alert("Trình duyệt của bạn không hỗ trợ nhận diện giọng nói.");
+    }
+
+    // 3. Xử lý Chuyển văn bản thành giọng nói (TTS)
+    function speak(text) {
+        // Ngừng các giọng đang nói dở
+        window.speechSynthesis.cancel();
+        
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'vi-VN';
+        
+        // Tìm giọng tiếng Việt trong hệ thống
+        const voices = window.speechSynthesis.getVoices();
+        const viVoice = voices.find(v => v.lang.includes('vi'));
+        if (viVoice) utterance.voice = viVoice;
+
+        utterance.rate = 1.0; // Tốc độ nói
+        window.speechSynthesis.speak(utterance);
+    }
+</script>
+
